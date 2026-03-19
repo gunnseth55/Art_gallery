@@ -1,6 +1,7 @@
 "use client";
 import {useEffect,useState} from "react";
 import Image from "next/image";
+import Wishlist from "../(components)/Wish.jsx"
 export default  function World(){
   const [cat,setCat]=useState([]);
   useEffect(()=>{
@@ -14,6 +15,8 @@ export default  function World(){
     fetchdata();
   },[]);
   const [show,setShow]=useState(null);
+  
+
 
   return(
     <div className="bg-gradient-to-r from-gray-600 to-black h-full">
@@ -59,6 +62,10 @@ export default  function World(){
                     className="object-cover p-4"
                     alt={item.name}
                   />
+                   <div 
+                              className="absolute bottom-4 right-4 z-10">
+                                <Wishlist artworkId={item.category_id} />
+                              </div>
                 </div>
               ))}
             </div>

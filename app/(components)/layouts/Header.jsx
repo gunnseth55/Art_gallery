@@ -5,8 +5,7 @@ export default function Header(){
         <>
         <div className="absolute z-10 w-full pt-8">
            <div className="relative flex items-center px-16 py-4">
-           
-           <h1 className="text-xl text-white"></h1>
+           <Link href="/wishlist"><h1 className="text-xl text-white">Wishlist</h1></Link>
           
            <Link href="/">
            <h1 className="absolute text-xl left-1/2 -translate-x-1/2 text-white">Home</h1>

@@ -1,3 +1,6 @@
+
+import Wishlist from "../../(components)/Wish.jsx"
+import Review from "../../(components)/Review.jsx"
 import Image from "next/image";
 
 export default async function ArtistProfile({ params }) {
@@ -19,6 +22,7 @@ export default async function ArtistProfile({ params }) {
   );
   const artworks=await artres.json();
 
+  
   return (
     <div className="bg-black">
        <video
@@ -46,6 +50,7 @@ export default async function ArtistProfile({ params }) {
                                         height={200}
                                         className="object-cover w-full h-auto"
                 />
+              
                            </div>
                 <div className=" text-gray-50 col-span-4 pt-6">
                     <p className="text-5xl font-serif font-bold">Nationality: {artist.country}</p>
@@ -54,7 +59,7 @@ export default async function ArtistProfile({ params }) {
             </div>
         </div>
       </section>
-
+     
       <section className="px-20 pb-20 relative">
         
         <div className="bg-amber-50/10 p-10 rounded-xl">
@@ -69,10 +74,15 @@ export default async function ArtistProfile({ params }) {
               src={item.image_url}
               alt={item.title}
               fill
-              className="object-cover rounded-2xl"
+              className="absolute object-cover rounded-2xl z-0"
             />
+            <div 
+            className="absolute bottom-4 right-4 z-10">
+              <Wishlist artworkId={item.artwork_id} />
+            </div>
             </div>
             <div className="text-white px-10 py-6">
+              
                <p className="text-5xl font-semibold font-serif">{item.title}</p>
                <p className="pt-6 test-xs ">CREATED AT : {item.created_at}</p>
                <p className="text-xl ">{item.description}</p>
@@ -88,6 +98,7 @@ export default async function ArtistProfile({ params }) {
           </div>
         </div>
       </section>
+       <Review artistId={artist.artist_id}/>
     </div>
   );
 }
