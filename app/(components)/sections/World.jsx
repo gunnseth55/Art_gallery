@@ -43,7 +43,7 @@ import  Link from "next/link";
                  />
                  
             </div>
-         <Link href="/world">
+         <Link href="/vibes">
           <div className="flex justify-center items-center mt-4">
             <FaChevronCircleRight className="text-3xl  hover:scale-110 transition duration-500"/>
             </div>

@@ -1,6 +1,7 @@
 "use client";
 import {useEffect,useState} from "react";
 import Image from "next/image";
+import Wishlist from "../(components)/Wish.jsx";
 
 export default  function World(){
   const [cat,setCat]=useState([]);
@@ -55,14 +56,19 @@ export default  function World(){
             </div>
             <p className="px-4 text-2xl font-semibold">{item.description}</p>
              {[item.image_url_1, item.image_url_2, item.image_url_3].map((img, i) => (
-                <div key={i} className="relative w-full h-screen ">
+              <div key={i} className="relative mb-8">
+                <div className="relative w-full h-80 lg:h-96">
                   <Image
                     src={img}
                     fill
-                    className="object-cover p-4"
+                    className="object-contain p-4"
                     alt={item.name}
                   />
                 </div>
+                 <div className="absolute bottom-4 right-4 z-10 bg-black/60 p-2 rounded-full border border-gray-700">
+                                      <Wishlist artworkId={item.category_id + ((i + 1) * 1000000)} />
+                                    </div>
+                                    </div>
               ))}
             </div>
           </div>

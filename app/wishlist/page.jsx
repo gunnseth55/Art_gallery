@@ -47,7 +47,7 @@ export default function WishlistPage(){
 
     if(loading) return <div className="">Loading Wishlist...</div>
     return(
-        <div>
+        <div className="min-h-screen bg-black">
            {!viewerId ? (
             <div className="flex flex-col items-center justify-center pt-32 text-white pb-32">
                 <p className="text-xl font-serif">Please sign in to view your wishlist.</p>
@@ -62,7 +62,7 @@ export default function WishlistPage(){
              <div className="flex justify-center items.center pt-30">
                 <h1 className="text-4xl font-serif">My Wishlist</h1>
             </div>
-                <div  className="grid grid-cols-3 gap-4 px-20">
+                <div  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-10 max-w-7xl mx-auto pb-20">
                      {data.map((item)=>(
                 <div key={item.artwork_id}
                 className="p-4 rounded-xl"
