@@ -41,7 +41,7 @@ export default function WishlistPage(){
             <p>Your Wishlist is empty!</p>
             </>
            ):(
-            <div className="bg-gradient-to-r from-gray-700 to-pink-200 h-screen">
+            <div className="bg-gradient-to-r from-gray-700 to-pink-200 h-full">
              <div className="flex justify-center items.center pt-30">
                 <h1 className="text-4xl font-serif">My Wishlist</h1>
             </div>
