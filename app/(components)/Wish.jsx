@@ -3,11 +3,16 @@ export default function Wishlist({artworkId})
 {
 const handleWishlist=async()=>{
   try{
+    const viewer_id = localStorage.getItem("viewer_id");
+    if (!viewer_id) {
+       alert("Please Sign In to add art to your wishlist.");
+       return;
+    }
     
     await fetch("/api/wishlist",{
      method: "POST",
      body:JSON.stringify({
-      user_id:1,
+      user_id: parseInt(viewer_id),
       artwork_id:artworkId,
      }),
     });

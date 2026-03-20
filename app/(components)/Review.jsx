@@ -21,11 +21,21 @@ const fetchReviews=async()=>{
     setReview(data);
 };
 
+useEffect(() => {
+    if (artistId) fetchReviews();
+}, [artistId]);
+
 const handlesubmit=async(e)=>{
     e.preventDefault();
+    const viewer_id = localStorage.getItem("viewer_id");
+    if (!viewer_id) {
+       alert("Please Sign In to leave a review.");
+       return;
+    }
+
     await fetch("/api/review",{
         method: "POST",
-        body: JSON.stringify({artist_id: artistId, user_id: 1, rating:rating, comment:comment}),
+        body: JSON.stringify({artist_id: artistId, user_id: parseInt(viewer_id), rating:rating, comment:comment}),
 
     })
     setComment("")

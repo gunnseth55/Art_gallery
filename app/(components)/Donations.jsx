@@ -5,11 +5,18 @@ export default function Donations({artistId,artistName}){
     const [status,setStatus]=useState("");
     const handleDonate =async(e)=>{
         if (e) e.preventDefault();
+        
+        const viewer_id = localStorage.getItem("viewer_id");
+        if (!viewer_id) {
+           alert("Please Sign In as a general user to make a donation.");
+           return;
+        }
+
         const res=await fetch("/api/donations",{
             method:"POST",
             body: JSON.stringify({
                 artist_id: artistId,
-                user_id: 1, 
+                user_id: parseInt(viewer_id), 
                 amount: parseFloat(amount)
             })
 

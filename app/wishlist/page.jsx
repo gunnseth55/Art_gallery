@@ -4,8 +4,17 @@ import {useState , useEffect  } from "react";
 export default function WishlistPage(){
     const [data,setData]=useState([]);
     const[loading,setLoading]=useState(true);
+    const [viewerId, setViewerId] = useState(null);
+
     useEffect(()=>{
-        fetch("/api/wishlist?user_id=1")
+        const vId = localStorage.getItem("viewer_id");
+        setViewerId(vId);
+        if (!vId) {
+            setLoading(false);
+            return;
+        }
+
+        fetch(`/api/wishlist?user_id=${vId}`)
             .then((res)=>res.json())
             .then((json)=>{
                 setData(json);
@@ -17,10 +26,13 @@ export default function WishlistPage(){
 
     const removeWishlist=async (artwork_id)=>{
         try{
+            const vId = localStorage.getItem("viewer_id");
+            if (!vId) return;
+
             const res=await fetch("/api/wishlist",{
                 method :"DELETE",
                 body: JSON.stringify({
-                    user_id:1,
+                    user_id: parseInt(vId),
                     artwork_id:artwork_id
                 })
             })
@@ -36,10 +48,15 @@ export default function WishlistPage(){
     if(loading) return <div className="">Loading Wishlist...</div>
     return(
         <div>
-           {data.length==0?(
-            <>
-            <p>Your Wishlist is empty!</p>
-            </>
+           {!viewerId ? (
+            <div className="flex flex-col items-center justify-center pt-32 text-white pb-32">
+                <p className="text-xl font-serif">Please sign in to view your wishlist.</p>
+                <a href="/login" className="mt-6 py-3 px-8 bg-amber-50 text-black font-bold uppercase tracking-widest rounded-xl hover:bg-amber-200 transition">Sign In</a>
+            </div>
+           ) : data.length==0?(
+            <div className="flex justify-center items-center pt-32 text-white pb-32">
+                <p className="text-xl font-serif">Your Wishlist is empty!</p>
+            </div>
            ):(
             <div className="bg-gradient-to-r from-gray-700 to-pink-200 h-full">
              <div className="flex justify-center items.center pt-30">

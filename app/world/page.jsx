@@ -1,12 +1,12 @@
 "use client";
 import {useEffect,useState} from "react";
 import Image from "next/image";
-import Wishlist from "../(components)/Wish.jsx"
+
 export default  function World(){
   const [cat,setCat]=useState([]);
   useEffect(()=>{
     async function fetchdata() {
-      const res=await fetch (`http://localhost:3000/api/categories`,{
+      const res=await fetch ("/api/categories",{
         cache:"no-store",
     });
     const data=await res.json();
@@ -62,10 +62,6 @@ export default  function World(){
                     className="object-cover p-4"
                     alt={item.name}
                   />
-                   <div 
-                              className="absolute bottom-4 right-4 z-10">
-                                <Wishlist artworkId={item.category_id} />
-                              </div>
                 </div>
               ))}
             </div>
