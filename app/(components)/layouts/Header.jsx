@@ -6,19 +6,24 @@ export default function Header(){
     const [artistId, setArtistId] = useState(null);
     const [viewerId, setViewerId] = useState(null);
     const [viewerName, setViewerName] = useState("");
+    const [isAdmin, setIsAdmin] = useState(false);
     const [mounted, setMounted] = useState(false);
 
-    // Using useEffect to safely check localStorage on client side
     useEffect(() => {
-        setArtistId(localStorage.getItem("artist_id"));
-        setViewerId(localStorage.getItem("viewer_id"));
-        setViewerName(localStorage.getItem("viewer_name"));
+        const aId = localStorage.getItem("artist_id");
+        const vId = localStorage.getItem("viewer_id");
+        const vName = localStorage.getItem("viewer_name");
+        setArtistId(aId);
+        setViewerId(vId);
+        setViewerName(vName);
+        setIsAdmin(localStorage.getItem("is_admin") === "true");
         setMounted(true);
     }, []);
 
     const handleViewerLogout = () => {
         localStorage.removeItem("viewer_id");
         localStorage.removeItem("viewer_name");
+        localStorage.removeItem("is_admin");
         window.location.href = "/";
     };
 
@@ -40,6 +45,11 @@ export default function Header(){
                <>
                  {viewerId ? (
                     <div className="flex items-center gap-3">
+                        {isAdmin && (
+                            <a href="/admin" className="text-red-400/80 hover:text-red-400 transition-colors text-xs uppercase tracking-widest font-bold border border-red-500/30 px-3 py-1 rounded-full">
+                                Admin Panel
+                            </a>
+                        )}
                         <span className="text-gray-400 text-sm tracking-widest uppercase">Hi, {viewerName}</span>
                         <button onClick={handleViewerLogout} className="text-red-500/80 hover:text-red-400 transition-colors text-xs uppercase tracking-widest">
                             [Logout]
@@ -68,4 +78,4 @@ export default function Header(){
         </div>
         </>
     )
-}
+}

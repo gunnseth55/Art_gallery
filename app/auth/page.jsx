@@ -12,9 +12,11 @@ export default function AuthPage() {
   // Form State
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [biography, setBiography] = useState("");
   const [country, setCountry] = useState("");
   const [profileFile, setProfileFile] = useState(null);
+  const [usernameError, setUsernameError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +38,9 @@ export default function AuthPage() {
           throw new Error(data.error || "Failed to login");
         }
 
+        // Clear any viewer session before setting artist session
+        localStorage.removeItem("viewer_id");
+        localStorage.removeItem("viewer_name");
         // Store artist info locally
         localStorage.setItem("artist_id", data.artist_id);
         localStorage.setItem("artist_name", data.name);
@@ -64,6 +69,7 @@ export default function AuthPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name,
+            username,
             email,
             biography,
             country,
@@ -105,6 +111,7 @@ export default function AuthPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {!isLogin && (
+            <>
             <div>
               <label className="block text-sm font-medium mb-1 tracking-wider">FULL NAME</label>
               <input
@@ -116,6 +123,21 @@ export default function AuthPage() {
                 placeholder="Leonardo da Vinci"
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium mb-1 tracking-wider">USERNAME</label>
+              <input
+                type="text"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value.toLowerCase())}
+                className="w-full bg-transparent border-b border-gray-600 focus:border-amber-50 p-2 outline-none transition-colors"
+                placeholder="leonardo_artist"
+                pattern="[a-z0-9_.]{3,30}"
+                title="3-30 chars. Only lowercase letters, numbers, _ and . allowed."
+              />
+              <p className="text-xs text-gray-500 mt-1">Lowercase letters, numbers, _ and . only · 3-30 chars</p>
+            </div>
+            </>
           )}
 
           <div>

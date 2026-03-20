@@ -12,6 +12,7 @@ export default function ViewerAuthPage() {
   // Form State
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,9 +34,13 @@ export default function ViewerAuthPage() {
           throw new Error(data.error || "Failed to login");
         }
 
+        // Clear any artist session before setting viewer session
+        localStorage.removeItem("artist_id");
+        localStorage.removeItem("artist_name");
         // Store viewer info locally safely
         localStorage.setItem("viewer_id", data.user_id);
         localStorage.setItem("viewer_name", data.name);
+        localStorage.setItem("is_admin", data.is_admin ? "true" : "false");
         
         // Hard refresh to rehydrate server components and flush client caches
         window.location.href = "/";
@@ -44,7 +49,7 @@ export default function ViewerAuthPage() {
         const res = await fetch("/api/auth/register-viewer", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email }),
+          body: JSON.stringify({ name, username, email }),
         });
         
         const data = await res.json();
@@ -81,6 +86,7 @@ export default function ViewerAuthPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {!isLogin && (
+            <>
             <div>
               <label className="block text-sm font-medium mb-1 tracking-wider text-gray-400">FULL NAME</label>
               <input
@@ -92,6 +98,21 @@ export default function ViewerAuthPage() {
                 placeholder="Jane Doe"
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium mb-1 tracking-wider text-gray-400">USERNAME</label>
+              <input
+                type="text"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value.toLowerCase())}
+                className="w-full bg-transparent border-b border-gray-600 focus:border-amber-50 p-2 outline-none transition-colors"
+                placeholder="jane_doe"
+                pattern="[a-z0-9_.]{3,30}"
+                title="3-30 chars. Only lowercase letters, numbers, _ and . allowed."
+              />
+              <p className="text-xs text-gray-500 mt-1">Lowercase letters, numbers, _ and . only · 3-30 chars</p>
+            </div>
+            </>
           )}
 
           <div>

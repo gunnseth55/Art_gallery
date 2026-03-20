@@ -109,7 +109,7 @@ export default function Four(){
                                   <Link href={`/artists/${item.slug}`}>
                                    <div className="cursor-pointer h-[300px] overflow-hidden">
                                      <Image
-                                       src={item.profile_image}
+                                        src={item.profile_image}
                                         alt={item.name}
                                         width={400}
                                         height={400}

@@ -21,6 +21,14 @@ export default function Dashboard() {
   
   const [isUploading, setIsUploading] = useState(false);
 
+  // Edit Profile state
+  const [showEditProfile, setShowEditProfile] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [editBio, setEditBio] = useState("");
+  const [editCountry, setEditCountry] = useState("");
+  const [editProfileFile, setEditProfileFile] = useState(null);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+
   useEffect(() => {
     const storedArtistId = localStorage.getItem("artist_id");
     const storedArtistName = localStorage.getItem("artist_name");
@@ -119,6 +127,47 @@ export default function Dashboard() {
     }
   };
 
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
+    setIsSavingProfile(true);
+    try {
+      let profileImageUrl = undefined;
+      if (editProfileFile) {
+        const formData = new FormData();
+        formData.append("file", editProfileFile);
+        const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
+        const uploadData = await uploadRes.json();
+        if (!uploadRes.ok) throw new Error(uploadData.error || "Image upload failed");
+        profileImageUrl = uploadData.url;
+      }
+
+      const res = await fetch("/api/auth/update-artist", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          artist_id: artistId,
+          name: editName || undefined,
+          biography: editBio || undefined,
+          country: editCountry || undefined,
+          profile_image: profileImageUrl,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      if (editName) {
+        setArtistName(editName);
+        localStorage.setItem("artist_name", editName);
+      }
+      alert("Profile updated!");
+      setShowEditProfile(false);
+      setEditName(""); setEditBio(""); setEditCountry(""); setEditProfileFile(null);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
+
   if (!artistId) return <div className="min-h-screen bg-black text-white p-20">Loading...</div>;
 
   return (
@@ -133,10 +182,42 @@ export default function Dashboard() {
             
             <button 
               onClick={handleLogout}
-              className="text-red-400 hover:text-red-300 text-sm mb-8 underline tracking-widest"
+              className="text-red-400 hover:text-red-300 text-sm mb-4 underline tracking-widest"
             >
               LOGOUT
             </button>
+
+            <button
+              onClick={() => setShowEditProfile(!showEditProfile)}
+              className="block text-amber-400/70 hover:text-amber-400 text-sm mb-8 underline tracking-widest transition-colors"
+            >
+              {showEditProfile ? "CANCEL EDIT" : "EDIT MY PROFILE"}
+            </button>
+
+            {showEditProfile && (
+              <form onSubmit={handleSaveProfile} className="space-y-4 mb-8 border-b border-amber-50/20 pb-8">
+                <h3 className="text-lg font-serif border-b border-amber-50/20 pb-2 mb-4">Edit Profile</h3>
+                <div>
+                  <label className="block text-xs font-medium mb-1 tracking-wider text-gray-300">DISPLAY NAME</label>
+                  <input value={editName} onChange={(e) => setEditName(e.target.value)} type="text" className="w-full bg-black border border-gray-600 focus:border-amber-50 rounded-md p-2 outline-none" placeholder={artistName} />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1 tracking-wider text-gray-300">BIOGRAPHY</label>
+                  <textarea rows={3} value={editBio} onChange={(e) => setEditBio(e.target.value)} className="w-full bg-black border border-gray-600 focus:border-amber-50 rounded-md p-2 outline-none" placeholder="Your artistic story..." />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1 tracking-wider text-gray-300">COUNTRY</label>
+                  <input value={editCountry} onChange={(e) => setEditCountry(e.target.value)} type="text" className="w-full bg-black border border-gray-600 focus:border-amber-50 rounded-md p-2 outline-none" placeholder="Italy" />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1 tracking-wider text-gray-300">PROFILE PICTURE</label>
+                  <input type="file" accept="image/*" onChange={(e) => setEditProfileFile(e.target.files[0])} className="w-full bg-black border border-gray-600 rounded-md p-2 outline-none file:mr-3 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:bg-amber-50 file:text-black" />
+                </div>
+                <button type="submit" disabled={isSavingProfile} className="w-full py-2 bg-amber-400 text-black font-bold rounded-lg text-sm tracking-widest hover:bg-amber-300 transition-colors disabled:opacity-50">
+                  {isSavingProfile ? "SAVING..." : "SAVE CHANGES"}
+                </button>
+              </form>
+            )}
 
             <h3 className="text-xl font-serif mb-6 border-b border-amber-50/20 pb-2">Upload New Artwork</h3>
             
