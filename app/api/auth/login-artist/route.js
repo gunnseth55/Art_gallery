@@ -1,0 +1,37 @@
+import { db } from "@/lib/db";
+
+export async function POST(req) {
+  try {
+    const { email } = await req.json();
+
+    if (!email) {
+      return Response.json({ error: "Email is required" }, { status: 400 });
+    }
+
+    // Find the user and their associated artist profile
+    const [rows] = await db.query(
+      `SELECT u.user_id, u.email, a.artist_id, a.name, a.slug 
+       FROM users u 
+       JOIN artists a ON u.user_id = a.user_id 
+       WHERE u.email = ? AND u.role = 'artist'`,
+      [email]
+    );
+
+    if (rows.length === 0) {
+      return Response.json({ error: "No artist found with this email" }, { status: 404 });
+    }
+
+    const artistData = rows[0];
+
+    return Response.json({ 
+      message: "Login successful", 
+      artist_id: artistData.artist_id,
+      name: artistData.name,
+      slug: artistData.slug
+    });
+
+  } catch (error) {
+    console.error("Login Error:", error);
+    return Response.json({ error: "Server error" }, { status: 500 });
+  }
+}

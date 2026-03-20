@@ -23,7 +23,7 @@ export default function Donations({artistId,artistName}){
     }
     return (
         <div className="text-white px-30 tracking-wider">
-        <h2 pb-2 className="text-5xl font-serif pb-2">Support {artistName}</h2>
+        <h2 className="text-5xl font-serif pb-2">Support {artistName}</h2>
         <p className="text-2xl font-serif pb-2">Every contribution helps the artists keep creating</p>
         <div>
             {[50,100,500,1000].map((item)=>(
@@ -48,7 +48,7 @@ export default function Donations({artistId,artistName}){
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                         placeholder="Enter custom amount"
-                        className="w-full border-stone-200 p-3 pl-8 rounded-xl text-lg focus:border-amber-400 outline-none transition-colors"
+                        className="w-full bg-transparent border-none p-3 pl-8 rounded-xl text-lg outline-none transition-colors"
                     />
                 </div>
                 

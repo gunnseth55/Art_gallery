@@ -2,6 +2,7 @@
 import Wishlist from "../../(components)/Wish.jsx"
 import Review from "../../(components)/Review.jsx"
 import Donations from "../../(components)/Donations.jsx"
+import PurchaseButton from "../../(components)/PurchaseButton.jsx"
 import Image from "next/image";
 
 export default async function ArtistProfile({ params }) {
@@ -88,9 +89,7 @@ export default async function ArtistProfile({ params }) {
                <p className="pt-6 test-xs ">CREATED AT : {item.created_at}</p>
                <p className="text-xl ">{item.description}</p>
                <p className="text-4xl ">COST : ₹{item.price}</p>
-              <div className="flex justify-center items-center">
-                <button className="cursor-pointer  bg-gray-700 p-4 rounded-2xl hover:text-gray-700 hover:bg-amber-50 transition-colors">BUY NOW</button>
-                </div>
+               <PurchaseButton artwork={item} />
             </div>
            
                     </div>
