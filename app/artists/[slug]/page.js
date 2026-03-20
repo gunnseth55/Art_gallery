@@ -1,6 +1,7 @@
 
 import Wishlist from "../../(components)/Wish.jsx"
 import Review from "../../(components)/Review.jsx"
+import Donations from "../../(components)/Donations.jsx"
 import Image from "next/image";
 
 export default async function ArtistProfile({ params }) {
@@ -98,6 +99,10 @@ export default async function ArtistProfile({ params }) {
           </div>
         </div>
       </section>
+      
+      <section className="relative z-10">
+    <Donations artistId={artist.artist_id} artistName={artist.name} />
+    </section>
        <Review artistId={artist.artist_id}/>
     </div>
   );
